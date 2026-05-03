@@ -71,15 +71,17 @@
                         <div class="col-md-6">
                             <label class="form-label">Gender <span class="text-danger">*</span></label>
                             <select name="gender" class="form-select @error('gender') is-invalid @enderror" required>
-                                <option value="male"   @selected(old('gender', $pet->gender) === 'male')>Male</option>
-                                <option value="female" @selected(old('gender', $pet->gender) === 'female')>Female</option>
+                                <option value="male"    @selected(old('gender', $pet->gender) === 'male')>Male</option>
+                                <option value="female"  @selected(old('gender', $pet->gender) === 'female')>Female</option>
+                                <option value="unknown" @selected(old('gender', $pet->gender) === 'unknown')>Unknown</option>
                             </select>
                             @error('gender')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Category <span class="text-danger">*</span></label>
-                            <select name="pet_category_id" class="form-select @error('pet_category_id') is-invalid @enderror" required>
+                            <select name="pet_category_id" id="categorySelect"
+                                    class="form-select @error('pet_category_id') is-invalid @enderror" required>
                                 <option value="">Select Category</option>
                                 @foreach($categories as $cat)
                                     <option value="{{ $cat->id }}"
@@ -93,7 +95,8 @@
 
                         <div class="col-md-6">
                             <label class="form-label">Breed</label>
-                            <select name="breed_id" class="form-select @error('breed_id') is-invalid @enderror">
+                            <select name="breed_id" id="breedSelect"
+                                    class="form-select @error('breed_id') is-invalid @enderror">
                                 <option value="">Select Breed</option>
                                 @foreach($breeds as $breed)
                                     <option value="{{ $breed->id }}"
@@ -128,10 +131,25 @@
                             @error('weight')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
+                        {{-- ✅ FIX: adoption_fee_type was missing — added here --}}
                         <div class="col-md-6">
-                            <label class="form-label">Adoption Fee (₱) <span class="text-danger">*</span></label>
-                            <input type="number" name="adoption_fee" class="form-control @error('adoption_fee') is-invalid @enderror"
-                                   value="{{ old('adoption_fee', $pet->adoption_fee) }}" step="0.01" min="0" required>
+                            <label class="form-label">Fee Type <span class="text-danger">*</span></label>
+                            <select name="adoption_fee_type" id="feeType"
+                                    class="form-select @error('adoption_fee_type') is-invalid @enderror" required>
+                                <option value="">— Select —</option>
+                                <option value="fixed"    @selected(old('adoption_fee_type', $pet->adoption_fee_type) === 'fixed')>Fixed Fee</option>
+                                <option value="donation" @selected(old('adoption_fee_type', $pet->adoption_fee_type) === 'donation')>Donation-Based</option>
+                                <option value="free"     @selected(old('adoption_fee_type', $pet->adoption_fee_type) === 'free')>Free</option>
+                            </select>
+                            @error('adoption_fee_type')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="col-md-6" id="feeAmountWrapper">
+                            <label class="form-label">Adoption Fee (₱)</label>
+                            <input type="number" name="adoption_fee"
+                                   class="form-control @error('adoption_fee') is-invalid @enderror"
+                                   value="{{ old('adoption_fee', $pet->adoption_fee) }}"
+                                   step="0.01" min="0">
                             @error('adoption_fee')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
@@ -213,6 +231,7 @@
 
 @push('scripts')
 <script>
+    // Photo preview
     document.getElementById('photoInput')?.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (!file) return;
@@ -226,5 +245,14 @@
         };
         reader.readAsDataURL(file);
     });
+
+    // Show/hide fee amount based on fee type
+    const feeType = document.getElementById('feeType');
+    const feeWrapper = document.getElementById('feeAmountWrapper');
+    function toggleFeeAmount() {
+        feeWrapper.style.display = feeType.value === 'fixed' ? '' : 'none';
+    }
+    feeType.addEventListener('change', toggleFeeAmount);
+    toggleFeeAmount(); // run on page load to reflect existing value
 </script>
 @endpush
