@@ -10,8 +10,7 @@
         border-radius: 20px;
         padding: 1.75rem 2rem 0;
         margin-bottom: 1.5rem;
-        position: relative;
-        overflow: hidden;
+        position: relative; overflow: hidden;
         min-height: 175px;
         border: 1px solid #EDD8C8;
     }
@@ -27,12 +26,8 @@
         font-size: 1.4rem; font-weight: 700; flex-shrink: 0;
         box-shadow: 0 4px 16px rgba(217,119,87,.3);
     }
-    .hero-banner .hero-greeting {
-        font-size: 1.55rem; font-weight: 800; color: var(--navy); margin: 0; line-height: 1.2;
-    }
-    .hero-banner .hero-sub {
-        font-size: .875rem; color: #8A7060; margin: .35rem 0 1rem; line-height: 1.5;
-    }
+    .hero-banner .hero-greeting { font-size: 1.55rem; font-weight: 800; color: var(--navy); margin: 0; line-height: 1.2; }
+    .hero-banner .hero-sub      { font-size: .875rem; color: #8A7060; margin: .35rem 0 1rem; line-height: 1.5; }
     .hero-banner .hero-sub strong { color: var(--navy); font-weight: 700; }
     .hero-banner .hero-cta {
         display: inline-flex; align-items: center; gap: .5rem;
@@ -56,7 +51,7 @@
     .journey-card {
         background: var(--white); border: 1px solid var(--border);
         border-radius: var(--radius); padding: 1.1rem 1.25rem;
-        margin-bottom: 1.25rem; box-shadow: var(--shadow-sm);
+        box-shadow: var(--shadow-sm);
     }
     .journey-card .jc-title {
         font-size: .78rem; font-weight: 700; text-transform: uppercase;
@@ -68,7 +63,10 @@
         flex: 1; background: var(--bg); border: 1.5px solid var(--border);
         border-radius: 12px; padding: .7rem .6rem .6rem;
         text-align: center; position: relative;
+        transform: scale(0.9); opacity: 0;
+        transition: transform .3s, opacity .3s;
     }
+    .journey-step.revealed { transform: scale(1); opacity: 1; }
     .journey-step.done     { background: var(--coral-subtle); border-color: var(--coral-light); }
     .journey-step.j-active { background: var(--coral); border-color: var(--coral); box-shadow: 0 4px 14px rgba(217,119,87,.35); }
     .js-icon {
@@ -89,8 +87,8 @@
     .journey-step.inactive .js-sub { color: transparent; }
     .journey-arrow {
         display: flex; align-items: center; justify-content: center;
-        font-size: .7rem; color: var(--border); flex-shrink: 0;
-        width: 20px;
+        font-size: .7rem; color: var(--border); flex-shrink: 0; width: 20px;
+        transition: color .4s;
     }
     .journey-arrow.lit { color: var(--coral-light); }
 
@@ -98,14 +96,16 @@
     .activity-item {
         display: flex; align-items: center; gap: .85rem;
         padding: .85rem 1.25rem; border-bottom: 1px solid var(--border);
-        transition: background .15s; cursor: default;
+        transition: background .15s;
     }
     .activity-item:last-child { border-bottom: none; }
     .activity-item:hover { background: var(--coral-subtle); }
     .act-thumb {
         width: 42px; height: 42px; border-radius: 10px;
         object-fit: cover; border: 2px solid var(--border); flex-shrink: 0;
+        transition: transform .2s, border-color .2s;
     }
+    .activity-item:hover .act-thumb { transform: scale(1.08); border-color: var(--coral); }
     .act-thumb-ph {
         width: 42px; height: 42px; border-radius: 10px;
         background: var(--coral-light); display: flex; align-items: center;
@@ -114,44 +114,111 @@
     .act-desc { font-size: .845rem; color: var(--text); line-height: 1.4; }
     .act-desc strong { color: var(--navy); font-weight: 700; }
     .act-time { font-size: .72rem; color: var(--muted); margin-top: .12rem; }
-    .act-badge {
-        font-size: .67rem; font-weight: 700; padding: .3em .8em;
-        border-radius: 20px; white-space: nowrap; flex-shrink: 0;
+    .act-badge { font-size: .67rem; font-weight: 700; padding: .3em .8em; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+    .sec-hdr {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: .85rem 1.25rem; border-bottom: 1px solid var(--border);
     }
+    .sec-hdr h6 { font-size: .9rem; font-weight: 700; color: var(--navy); margin: 0; }
+    .sec-hdr a  { font-size: .78rem; color: var(--coral); text-decoration: none; display: flex; align-items: center; gap: .3rem; }
+    .sec-hdr a:hover { text-decoration: underline; }
 
-    /* ── Pet grid cards ── */
+    /* ── Pet Grid Cards ── */
     .pet-grid-wrap { padding: .9rem; }
     .pet-grid-card {
         border-radius: 14px; overflow: hidden; border: 1px solid var(--border);
-        background: var(--white); transition: transform .2s, box-shadow .2s;
-        box-shadow: var(--shadow-sm);
+        transition: transform .22s, box-shadow .22s;
     }
-    .pet-grid-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
-    .pet-grid-card .pgc-img { width: 100%; height: 120px; object-fit: cover; }
-    .pet-grid-card .pgc-ph {
-        width: 100%; height: 120px; background: var(--coral-light);
-        display: flex; align-items: center; justify-content: center; font-size: 3rem;
+    .pet-grid-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .pgc-img { width: 100%; height: 130px; object-fit: cover; transition: transform .35s; }
+    .pet-grid-card:hover .pgc-img { transform: scale(1.06); }
+    .pgc-img-ph {
+        height: 130px; background: var(--coral-light);
+        display: flex; align-items: center; justify-content: center; font-size: 2.5rem;
     }
-    .pet-grid-card .pgc-body { padding: .65rem .75rem .75rem; }
-    .pet-grid-card .pgc-name { font-size: .875rem; font-weight: 700; color: var(--navy); margin-bottom: .15rem; }
-    .pet-grid-card .pgc-meta { font-size: .73rem; color: var(--muted); margin-bottom: .65rem; }
+    .pgc-body { padding: .65rem .8rem .8rem; background: var(--white); }
+    .pgc-name { font-size: .85rem; font-weight: 700; color: var(--navy); }
+    .pgc-meta { font-size: .72rem; color: var(--muted); margin-bottom: .5rem; }
     .btn-view-profile {
-        display: block; width: 100%; text-align: center;
-        background: var(--coral); color: #fff; border: none;
-        border-radius: 20px; padding: .38rem .9rem;
-        font-size: .78rem; font-weight: 600; text-decoration: none;
-        transition: background .15s;
+        display: block; text-align: center; background: var(--coral);
+        color: #fff; border-radius: 20px; padding: .35rem .75rem;
+        font-size: .72rem; font-weight: 600; text-decoration: none;
+        transition: background .15s, transform .15s;
     }
-    .btn-view-profile:hover { background: var(--coral-dark); color: #fff; }
+    .btn-view-profile:hover { background: var(--coral-dark); transform: translateY(-1px); color: #fff; }
 
-    /* ── Section header ── */
-    .sec-hdr {
-        display: flex; align-items: center; justify-content: space-between;
-        padding: 1rem 1.25rem; border-bottom: 1px solid var(--border);
+    /* ── Stats summary ── */
+    .stat-mini-val { font-size: 1.5rem; font-weight: 800; line-height: 1; }
+    .stat-mini-lbl { font-size: .63rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: .2rem; }
+
+    /* ════════════════════════════════
+       ANIMATIONS
+    ════════════════════════════════ */
+
+    @keyframes heroBannerIn {
+        from { opacity: 0; transform: translateY(-20px) scale(.98); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
     }
-    .sec-hdr h6 { font-size: .92rem; font-weight: 700; color: var(--navy); margin: 0; }
-    .sec-hdr a  { font-size: .78rem; color: var(--coral); text-decoration: none; display: flex; align-items: center; gap: .25rem; }
-    .sec-hdr a:hover { text-decoration: underline; }
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideInLeft {
+        from { opacity: 0; transform: translateX(-20px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(20px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes cardPop {
+        0%   { opacity: 0; transform: translateY(18px) scale(.97); }
+        60%  { transform: translateY(-3px) scale(1.01); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes avatarPop {
+        0%   { transform: scale(0); }
+        70%  { transform: scale(1.08); }
+        100% { transform: scale(1); }
+    }
+
+    /* Hero */
+    .hero-banner { animation: heroBannerIn .55s cubic-bezier(.25,.46,.45,.94) both; }
+    .hero-banner .hero-avatar,
+    .hero-banner .hero-avatar-fallback {
+    animation: avatarPop .5s cubic-bezier(.34,1.56,.64,1) .3s forwards;
+}
+@keyframes avatarPop {
+    0%   { opacity: 0; transform: scale(0); }
+    70%  { opacity: 1; transform: scale(1.08); }
+    100% { opacity: 1; transform: scale(1); }
+}
+    .hero-greeting { opacity: 0; animation: fadeUp .4s ease .35s both; }
+    .hero-sub      { opacity: 0; animation: fadeUp .4s ease .45s both; }
+    .hero-cta      { opacity: 0; animation: fadeUp .4s ease .55s both; }
+
+    /* Left column */
+    .col-left  { opacity: 0; animation: slideInLeft  .45s ease .2s both; }
+    .col-right { opacity: 0; animation: slideInRight .45s ease .3s both; }
+
+    /* Journey card inside left col */
+    .journey-card { opacity: 0; animation: fadeUp .4s ease .4s both; }
+
+    /* Activity card */
+    .activity-card { opacity: 0; animation: fadeUp .4s ease .55s both; }
+
+    /* Activity items — JS staggers */
+    .activity-item { opacity: 0; }
+    .activity-item.visible { animation: slideInLeft .38s ease both; }
+
+    /* Pet cards — JS staggers */
+    .pet-col { opacity: 0; }
+    .pet-col.visible { animation: cardPop .42s cubic-bezier(.25,.46,.45,.94) both; }
+
+    /* Stats card */
+    .stats-card { opacity: 0; animation: fadeUp .4s ease .5s both; }
+
+    /* Stat values count up via JS */
 </style>
 @endpush
 
@@ -159,7 +226,7 @@
 
 @php
     $nameParts  = explode(' ', auth()->user()->name);
-    $honorifics = ['system','dr.','dr','mr.','mr','ms.','ms','mrs.','mrs','prof.','prof'];
+    $honorifics = ['system', 'dr.', 'dr', 'mr.', 'mr', 'ms.', 'ms', 'mrs.', 'mrs', 'prof.', 'prof'];
     $firstName  = collect($nameParts)->first(fn($p) => !in_array(strtolower($p), $honorifics)) ?? last($nameParts);
 
     $latestApp    = $applications->first();
@@ -187,7 +254,7 @@
                 @if($stats['pending'] > 0)
                     You're <strong>{{ $stats['pending'] }} {{ Str::plural('application', $stats['pending']) }}</strong> away from giving a <strong>pet a home</strong> 🧡
                 @elseif($stats['completed'] > 0)
-                    You've given <strong>{{ $stats['completed'] }} {{ Str::plural('pet', $stats['completed']) }} a forever home!</strong> 
+                    You've given <strong>{{ $stats['completed'] }} {{ Str::plural('pet', $stats['completed']) }} a forever home!</strong> 🎉
                 @else
                     Start your journey — find your <strong>perfect companion</strong> today 🐾
                 @endif
@@ -206,14 +273,14 @@
 <div class="row g-3">
 
     {{-- ── LEFT COLUMN ── --}}
-    <div class="col-lg-7 d-flex flex-column gap-3">
+    <div class="col-lg-7 d-flex flex-column gap-3 col-left">
 
         {{-- Adoption Journey --}}
         <div class="journey-card">
             <div class="jc-title">
                 <i class="bi bi-map" style="color:var(--coral);"></i> Your Adoption Journey
             </div>
-            <div class="journey-steps">
+            <div class="journey-steps" id="journeySteps">
                 @php
                     $steps = [
                         ['icon' => 'bi-search-heart',       'label' => 'Browse Pets',    'sub' => $featuredPets->count() . ' pets available'],
@@ -228,10 +295,8 @@
                             <i class="bi bi-chevron-right"></i>
                         </div>
                     @endif
-                    @php
-                        $state = $i < $journeyStep ? 'done' : ($i === $journeyStep ? 'j-active' : 'inactive');
-                    @endphp
-                    <div class="journey-step {{ $state }}">
+                    @php $state = $i < $journeyStep ? 'done' : ($i === $journeyStep ? 'j-active' : 'inactive'); @endphp
+                    <div class="journey-step {{ $state }}" data-step="{{ $i }}">
                         <div class="js-icon"><i class="bi {{ $step['icon'] }}"></i></div>
                         <div class="js-label">{{ $step['label'] }}</div>
                         <div class="js-sub">{{ $step['sub'] }}</div>
@@ -241,7 +306,7 @@
         </div>
 
         {{-- Recent Activity --}}
-        <div class="card">
+        <div class="card activity-card">
             <div class="sec-hdr">
                 <h6><i class="bi bi-clock-history me-2" style="color:var(--coral);"></i>Recent Activity</h6>
                 <a href="{{ route('adopter.applications.index') }}">View All <i class="bi bi-arrow-right"></i></a>
@@ -256,8 +321,8 @@
                     </a>
                 </div>
             @else
-                @foreach($applications as $app)
-                <div class="activity-item">
+                @foreach($applications as $i => $app)
+                <div class="activity-item" data-index="{{ $i }}">
                     @if($app->pet?->primary_image)
                         <img src="{{ $app->pet?->primary_image_url }}" class="act-thumb" alt="">
                     @else
@@ -265,43 +330,24 @@
                     @endif
                     <div class="flex-grow-1 min-w-0">
                         <div class="act-desc">
+                            Application <strong>{{ $app->application_number }}</strong> ·
                             @if(in_array($app->status, ['pending','submitted']))
-                                Submitted an application for <strong>{{ $app->pet?->name ?? 'Unknown Pet' }}</strong>
+                                Submitted for <strong>{{ $app->pet?->name ?? 'Unknown Pet' }}</strong>
                             @elseif(in_array($app->status, ['reviewing','under_review']))
-                                <strong>{{ $app->pet?->name ?? 'Unknown Pet' }}</strong> application is currently under review
-                            @elseif($app->status === 'interview')
-                                Interview scheduled for <strong>{{ $app->pet?->name ?? 'Unknown Pet' }}</strong>
+                                <strong>{{ $app->pet?->name ?? 'Pet' }}</strong> under review
                             @elseif($app->status === 'approved')
-                                Application for <strong>{{ $app->pet?->name ?? 'Unknown Pet' }}</strong> has been approved! 
+                                <strong>{{ $app->pet?->name ?? 'Pet' }}</strong> approved! 🎉
                             @elseif($app->status === 'completed')
-                                You completed an adoption for <strong>{{ $app->pet?->name ?? 'Deleted Pet' }}</strong> 
+                                Adopted <strong>{{ $app->pet?->name ?? 'Pet' }}</strong> successfully! 🏠
                             @elseif($app->status === 'rejected')
-                                Application for <strong>{{ $app->pet?->name ?? 'Unknown Pet' }}</strong> was not approved
+                                Application for <strong>{{ $app->pet?->name ?? 'Pet' }}</strong> was not approved
                             @else
-                                Application <strong>{{ $app->application_number }}</strong> · {{ ucfirst($app->status) }}
+                                {{ ucfirst(str_replace('_',' ',$app->status)) }}
                             @endif
                         </div>
-                        <div class="act-time">
-                            {{ $app->submitted_at?->diffForHumans() ?? $app->created_at->diffForHumans() }}
-                        </div>
+                        <div class="act-time">{{ $app->created_at->diffForHumans() }}</div>
                     </div>
-                    @php
-                        $badgeStyles = [
-                            'pending'      => 'background:var(--gold-light);   color:#7A5A1A;',
-                            'submitted'    => 'background:var(--gold-light);   color:#7A5A1A;',
-                            'under_review' => 'background:var(--coral-subtle); color:var(--coral-dark);',
-                            'reviewing'    => 'background:var(--coral-subtle); color:var(--coral-dark);',
-                            'interview'    => 'background:var(--coral-subtle); color:var(--coral-dark);',
-                            'approved'     => 'background:var(--sage-light);   color:#2D5A3D;',
-                            'completed'    => 'background:var(--sage-light);   color:#2D5A3D;',
-                            'rejected'     => 'background:#FEF0EE;             color:#8B2516;',
-                            'withdrawn'    => 'background:#F3F4F6;             color:#6B7280;',
-                        ];
-                        $bs = $badgeStyles[$app->status] ?? 'background:var(--bg);color:var(--muted);';
-                    @endphp
-                    <span class="act-badge" style="{{ $bs }}">
-                        {{ ucfirst(str_replace('_', ' ', $app->status)) }}
-                    </span>
+                    <span class="act-badge bg-{{ $app->status_badge }}">{{ $app->status_label }}</span>
                 </div>
                 @endforeach
             @endif
@@ -310,52 +356,44 @@
     </div>
 
     {{-- ── RIGHT COLUMN ── --}}
-    <div class="col-lg-5 d-flex flex-column gap-3">
+    <div class="col-lg-5 d-flex flex-column gap-3 col-right">
 
         {{-- Pets Looking for a Home --}}
+        @if($featuredPets->count())
         <div class="card">
             <div class="sec-hdr">
                 <h6><i class="bi bi-heart-fill me-2" style="color:var(--coral);"></i>Pets Looking for a Home</h6>
                 <a href="{{ route('adopter.pets.index') }}">Browse All <i class="bi bi-arrow-right"></i></a>
             </div>
-            @if($featuredPets->isEmpty())
-                <div class="empty-state py-4">
-                    <span class="empty-icon">🐾</span>
-                    <h5>No Pets Available</h5>
-                    <p>Check back soon for new listings!</p>
-                </div>
-            @else
-                <div class="pet-grid-wrap">
-                    <div class="row g-2">
-                        @foreach($featuredPets->take(4) as $pet)
-                        <div class="col-6">
-                            <div class="pet-grid-card">
-                                @if($pet->primary_image)
-                                    <img src="{{ $pet->primary_image_url }}" class="pgc-img" alt="{{ $pet->name }}">
-                                @else
-                                    <div class="pgc-ph">
-                                        {{ ($pet->category->name ?? '') === 'Dog' ? '🐶' : (($pet->category->name ?? '') === 'Cat' ? '🐱' : '🐾') }}
-                                    </div>
-                                @endif
-                                <div class="pgc-body">
-                                    <div class="pgc-name">{{ $pet->name }}</div>
-                                    <div class="pgc-meta">
-                                        {{ $pet->category->name ?? '—' }} · {{ $pet->age_label ?? '' }}
-                                    </div>
-                                    <a href="{{ route('adopter.pets.show', $pet) }}" class="btn-view-profile">
-                                        View Profile
-                                    </a>
+            <div class="pet-grid-wrap">
+                <div class="row g-2" id="petGrid">
+                    @foreach($featuredPets->take(6) as $i => $pet)
+                    <div class="col-6 pet-col" data-index="{{ $i }}">
+                        <div class="pet-grid-card">
+                            @if($pet->primary_image)
+                                <img src="{{ $pet->primary_image_url }}" class="pgc-img" alt="{{ $pet->name }}">
+                            @else
+                                <div class="pgc-img-ph">
+                                    {{ ($pet->category->name ?? '') === 'Dog' ? '🐶' : (($pet->category->name ?? '') === 'Cat' ? '🐱' : '🐾') }}
                                 </div>
+                            @endif
+                            <div class="pgc-body">
+                                <div class="pgc-name">{{ $pet->name }}</div>
+                                <div class="pgc-meta">{{ $pet->category->name ?? '—' }} · {{ $pet->age_label ?? '' }}</div>
+                                <a href="{{ route('adopter.pets.show', $pet) }}" class="btn-view-profile">
+                                    View Profile
+                                </a>
                             </div>
                         </div>
-                        @endforeach
                     </div>
+                    @endforeach
                 </div>
-            @endif
+            </div>
         </div>
+        @endif
 
-        {{-- Stats summary --}}
-        <div class="card" style="border-top: 3px solid var(--coral);">
+        {{-- My Adoption Stats --}}
+        <div class="card stats-card" style="border-top: 3px solid var(--coral);">
             <div class="card-header" style="padding:.85rem 1.25rem;">
                 <h6 class="mb-0 fw-bold" style="color:var(--navy); font-size:.88rem;">
                     <i class="bi bi-graph-up me-2" style="color:var(--coral);"></i>My Adoption Stats
@@ -370,8 +408,8 @@
                         ['val' => $stats['completed'],          'lbl' => 'Completed', 'color' => 'var(--navy)'],
                     ] as $s)
                     <div class="col-3">
-                        <div style="font-size:1.5rem; font-weight:800; color:{{ $s['color'] }}; line-height:1;">{{ $s['val'] }}</div>
-                        <div style="font-size:.63rem; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-top:.2rem;">{{ $s['lbl'] }}</div>
+                        <div class="stat-mini-val" style="color:{{ $s['color'] }};" data-count="{{ $s['val'] }}">0</div>
+                        <div class="stat-mini-lbl">{{ $s['lbl'] }}</div>
                     </div>
                     @endforeach
                 </div>
@@ -382,3 +420,50 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // ── 1. Journey steps pop in with stagger ──
+    document.querySelectorAll('.journey-step').forEach(step => {
+        const i     = parseInt(step.dataset.step);
+        const delay = 600 + (i * 120);
+        setTimeout(() => step.classList.add('revealed'), delay);
+    });
+
+    // ── 2. Activity items slide in ──
+    document.querySelectorAll('.activity-item').forEach(item => {
+        const delay = 700 + (parseInt(item.dataset.index) * 90);
+        setTimeout(() => item.classList.add('visible'), delay);
+    });
+
+    // ── 3. Pet cards pop in row-aware ──
+    document.querySelectorAll('.pet-col').forEach(col => {
+        const i     = parseInt(col.dataset.index);
+        const row   = Math.floor(i / 2);
+        const col_i = i % 2;
+        const delay = 500 + (row * 120) + (col_i * 60);
+        setTimeout(() => col.classList.add('visible'), delay);
+    });
+
+    // ── 4. Stats count-up ──
+    function countUp(el) {
+        const target = parseInt(el.dataset.count);
+        if (isNaN(target) || target === 0) { el.textContent = '0'; return; }
+        const dur = 700, step = 16, inc = target / (dur / step);
+        let cur = 0;
+        const t = setInterval(() => {
+            cur += inc;
+            if (cur >= target) { clearInterval(t); el.textContent = target; }
+            else el.textContent = Math.floor(cur);
+        }, step);
+    }
+
+    setTimeout(() => {
+        document.querySelectorAll('[data-count]').forEach(countUp);
+    }, 550);
+
+});
+</script>
+@endpush

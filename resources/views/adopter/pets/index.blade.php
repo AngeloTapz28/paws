@@ -8,10 +8,11 @@
 
 @push('styles')
 <style>
+    /* ── Filter bar ── */
     .filter-bar {
         background: var(--white); border: 1px solid var(--border);
         border-radius: var(--radius); padding: 1rem 1.25rem;
-        margin-bottom: 1.25rem; box-shadow: var(--shadow-sm);
+        margin-bottom: 1rem; box-shadow: var(--shadow-sm);
     }
     .search-wrap { position: relative; }
     .search-wrap .bi-search {
@@ -20,58 +21,112 @@
     }
     .search-wrap input { padding-left: 2.1rem; }
 
-    /* Pet card */
+    /* ── Pet card ── */
     .pet-card-adopt {
         background: var(--white); border: 1px solid var(--border);
         border-radius: var(--radius); overflow: hidden;
-        transition: transform .2s, box-shadow .2s; box-shadow: var(--shadow-sm);
-        display: flex; flex-direction: column; height: 100%;
+        display: flex; flex-direction: column;
+        box-shadow: var(--shadow-sm);
+        transition: transform .22s ease, box-shadow .22s ease;
     }
-    .pet-card-adopt:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
-    .pet-card-adopt .pc-img { height: 200px; width: 100%; object-fit: cover; }
-    .pet-card-adopt .pc-placeholder {
-        height: 200px; background: var(--coral-light);
-        display: flex; align-items: center; justify-content: center; font-size: 4rem;
-    }
-    .pet-card-adopt .pc-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; gap: .3rem; }
-    .pet-card-adopt .pc-name { font-size: 1rem; font-weight: 700; color: var(--navy); margin: 0; }
-    .pet-card-adopt .pc-meta { font-size: .78rem; color: var(--muted); }
-    .pet-card-adopt .pc-fee {
-        font-size: .78rem; font-weight: 700; color: #2D5A3D;
-        background: var(--sage-light); padding: .2em .65em; border-radius: 20px; display: inline-block;
-    }
-    .pet-card-adopt .pc-footer {
-        padding: .85rem 1rem; border-top: 1px solid var(--border); margin-top: auto;
-    }
-    .btn-adopt-now {
-        display: block; width: 100%; text-align: center; padding: .55rem;
-        background: var(--coral); color: #fff; border: none; border-radius: var(--radius-sm);
-        font-size: .855rem; font-weight: 600; text-decoration: none;
-        transition: background .15s, transform .1s;
-    }
-    .btn-adopt-now:hover { background: var(--coral-dark); color: #fff; transform: translateY(-1px); }
+    .pet-card-adopt:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
 
-    /* Tag chips */
-    .pet-tag {
-        font-size: .68rem; padding: .22em .6em; border-radius: 6px;
-        background: var(--bg); color: var(--muted); font-weight: 500;
+    /* ── Image ── */
+    .pc-img-wrap { position: relative; overflow: hidden; height: 220px; }
+    .pc-img {
+        width: 100%; height: 220px; object-fit: cover;
+        transition: transform .35s ease;
+        display: block;
     }
+    .pet-card-adopt:hover .pc-img { transform: scale(1.07); }
+    .pc-placeholder {
+        height: 220px; background: var(--coral-light);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 4rem;
+    }
+
+    /* ── Body ── */
+    .pc-body { padding: .9rem 1rem; flex: 1; display: flex; flex-direction: column; gap: .3rem; }
+    .pc-name { font-size: 1rem; font-weight: 800; color: var(--navy); margin: 0; }
+    .pc-meta { font-size: .76rem; color: var(--muted); margin: 0; }
+
+    /* ── Tags ── */
+    .pc-tags { display: flex; gap: .35rem; flex-wrap: wrap; margin-top: .3rem; }
+    .pet-tag {
+        font-size: .68rem; font-weight: 500; padding: .22em .65em;
+        border-radius: 6px; background: var(--bg); color: var(--text);
+    }
+    .tag-vaccinated {
+        font-size: .68rem; font-weight: 600; padding: .22em .65em;
+        border-radius: 6px; background: var(--sage-light); color: #2D5A3D;
+        display: inline-flex; align-items: center; gap: .25rem;
+    }
+
+    /* ── Fee ── */
+    .pc-fee {
+        font-size: .8rem; font-weight: 700; color: var(--coral);
+        background: var(--coral-subtle); padding: .25em .75em;
+        border-radius: 20px; display: inline-block; margin-top: .35rem;
+    }
+
+    /* ── Footer button ── */
+    .pc-footer { padding: .85rem 1rem; border-top: 1px solid var(--border); }
+    .btn-adopt-now {
+        display: block; width: 100%; text-align: center; padding: .6rem;
+        background: var(--coral); color: #fff; border: none; border-radius: var(--radius-sm);
+        font-size: .87rem; font-weight: 600; text-decoration: none;
+        transition: background .15s, transform .12s, box-shadow .15s;
+        display: flex; align-items: center; justify-content: center; gap: .4rem;
+    }
+    .btn-adopt-now:hover {
+        background: var(--coral-dark); color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 14px rgba(217,119,87,.35);
+    }
+
+    /* ════════════════════════════════
+       ANIMATIONS
+    ════════════════════════════════ */
+
+    @keyframes fadeDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes cardPop {
+        0%   { opacity: 0; transform: translateY(22px) scale(.96); }
+        60%  { transform: translateY(-4px) scale(1.01); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Filter bar */
+    .filter-bar { animation: fadeDown .4s ease both; }
+
+    /* Results row */
+    .results-row { opacity: 0; animation: fadeUp .4s ease .2s both; }
+
+    /* Pet columns — JS staggers */
+    .pet-col { opacity: 0; }
+    .pet-col.visible { animation: cardPop .45s cubic-bezier(.25,.46,.45,.94) both; }
 </style>
 @endpush
 
 @section('content')
 
-{{-- Filter Bar --}}
+{{-- ── Filter Bar ── --}}
 <div class="filter-bar">
-    <form method="GET" class="row g-2 align-items-end">
-        <div class="col-md-4 col-lg-5">
+    <form method="GET" class="row g-2 align-items-center">
+        <div class="col-sm-5 col-md-4">
             <div class="search-wrap">
                 <i class="bi bi-search"></i>
                 <input type="text" name="search" class="form-control form-control-sm"
-                       value="{{ request('search') }}" placeholder="Search by name, breed…">
+                       value="{{ request('search') }}" placeholder="Search by name, breed...">
             </div>
         </div>
-        <div class="col-md-3 col-lg-2">
+        <div class="col-sm-3 col-md-2">
             <select name="category" class="form-select form-select-sm">
                 <option value="">All Types</option>
                 @foreach($categories as $cat)
@@ -81,7 +136,7 @@
                 @endforeach
             </select>
         </div>
-        <div class="col-md-3 col-lg-2">
+        <div class="col-sm-3 col-md-2">
             <select name="gender" class="form-select form-select-sm">
                 <option value="">Any Gender</option>
                 <option value="male"   @selected(request('gender') === 'male')>Male</option>
@@ -95,75 +150,81 @@
     </form>
 </div>
 
-{{-- Results count --}}
-<div class="d-flex align-items-center justify-content-between mb-3">
+{{-- ── Results Count ── --}}
+<div class="results-row d-flex align-items-center justify-content-between mb-3">
     <p class="mb-0" style="font-size:.83rem; color:var(--muted);">
         <strong style="color:var(--navy);">{{ $pets->total() }}</strong> pets available for adoption
     </p>
+    @if($pets->total() > 0)
+    <span style="font-size:.75rem; color:var(--muted);">
+        Showing {{ $pets->firstItem() }}–{{ $pets->lastItem() }}
+    </span>
+    @endif
 </div>
 
-{{-- Grid --}}
+{{-- ── Pet Grid ── --}}
 @if($pets->isEmpty())
     <div class="card">
         <div class="empty-state py-5">
             <span class="empty-icon">🐾</span>
             <h5>No Pets Found</h5>
             <p>Try adjusting your search filters.</p>
+            <a href="{{ route('adopter.pets.index') }}" class="btn btn-primary btn-sm">Clear Filters</a>
         </div>
     </div>
 @else
-    <div class="row g-3">
-        @foreach($pets as $pet)
-        <div class="col-sm-6 col-md-4 col-xl-3">
+    <div class="row g-3" id="petGrid">
+        @foreach($pets as $i => $pet)
+        <div class="col-sm-6 col-md-4 col-xl-3 pet-col" data-index="{{ $i }}">
             <div class="pet-card-adopt">
-                @if($pet->primary_image)
-                    <img src="{{ $pet->primary_image_url }}" class="pc-img" alt="{{ $pet->name }}">
-                @else
-                    <div class="pc-placeholder">
-                        {{ ($pet->category->name ?? '') === 'Dog' ? '🐶' : (($pet->category->name ?? '') === 'Cat' ? '🐱' : '🐾') }}
-                    </div>
-                @endif
 
+                {{-- Image ── --}}
+                <div class="pc-img-wrap">
+                    @if($pet->primary_image)
+                        <img src="{{ $pet->primary_image_url }}" class="pc-img" alt="{{ $pet->name }}">
+                    @else
+                        <div class="pc-placeholder">
+                            {{ ($pet->category->name ?? '') === 'Dog' ? '🐶' : (($pet->category->name ?? '') === 'Cat' ? '🐱' : '🐾') }}
+                        </div>
+                    @endif
+                </div>
+
+                {{-- Body ── --}}
                 <div class="pc-body">
                     <p class="pc-name">{{ $pet->name }}</p>
                     <p class="pc-meta">
                         {{ $pet->category->name ?? '—' }}
                         @if($pet->breed) · {{ $pet->breed->name }} @endif
                     </p>
-                    <div class="d-flex flex-wrap gap-1 mt-1">
+                    <div class="pc-tags">
+                        @if($pet->gender)
                         <span class="pet-tag">{{ ucfirst($pet->gender) }}</span>
-                        <span class="pet-tag">{{ $pet->age_label }}</span>
+                        @endif
                         @if($pet->size)
-                            <span class="pet-tag">{{ ucfirst($pet->size) }}</span>
+                        <span class="pet-tag">{{ ucfirst($pet->size) }}</span>
                         @endif
                         @if($pet->is_vaccinated)
-                            <span class="pet-tag" style="background:var(--sage-light); color:#2D5A3D;">💉 Vaccinated</span>
-                        @endif
-                        @if($pet->is_neutered)
-                            <span class="pet-tag" style="background:var(--sage-light); color:#2D5A3D;">✂️ Neutered</span>
+                        <span class="tag-vaccinated">
+                            <i class="bi bi-patch-check-fill" style="font-size:.65rem;"></i> Vaccinated
+                        </span>
                         @endif
                     </div>
-                    @if($pet->adoption_fee > 0)
-                        <div class="mt-2">
-                            <span class="pc-fee">₱{{ number_format($pet->adoption_fee) }} adoption fee</span>
-                        </div>
-                    @else
-                        <div class="mt-2">
-                            <span class="pc-fee" style="background:var(--coral-subtle); color:var(--coral);">Free adoption</span>
-                        </div>
-                    @endif
+                    <span class="pc-fee">₱{{ number_format($pet->adoption_fee) }} adoption fee</span>
                 </div>
 
+                {{-- Footer ── --}}
                 <div class="pc-footer">
                     <a href="{{ route('adopter.pets.show', $pet) }}" class="btn-adopt-now">
-                        <i class="bi bi-heart me-1"></i> Meet {{ $pet->name }}
+                        <i class="bi bi-heart"></i> Meet {{ $pet->name }}
                     </a>
                 </div>
+
             </div>
         </div>
         @endforeach
     </div>
 
+    {{-- Pagination ── --}}
     @if($pets->hasPages())
     <div class="d-flex justify-content-center mt-4">
         {{ $pets->withQueryString()->links() }}
@@ -172,3 +233,18 @@
 @endif
 
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Stagger pet cards popping in — row-aware
+    document.querySelectorAll('.pet-col').forEach(col => {
+        const i     = parseInt(col.dataset.index);
+        const row   = Math.floor(i / 4); // 4 per row on xl
+        const col_i = i % 4;
+        const delay = 280 + (row * 110) + (col_i * 55);
+        setTimeout(() => col.classList.add('visible'), delay);
+    });
+});
+</script>
+@endpush
