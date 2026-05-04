@@ -11,23 +11,23 @@ use App\Models\Breed;
 class CategoryController extends Controller
 {
     public function index()
-{
-    $categories = PetCategory::withCount('pets', 'breeds')
-        ->latest()
-        ->paginate(15);
+    {
+        $categories = PetCategory::withCount('pets', 'breeds')
+            ->latest()
+            ->paginate(15);
 
-    $breeds = Breed::with('petCategory')
-        ->withCount('pets')
-        ->latest()
-        ->paginate(20);
+        $breeds = Breed::with('petCategory')
+            ->withCount('pets')
+            ->latest()
+            ->paginate(20);
 
-    return view('admin.categories.index', compact('categories', 'breeds'));
-}
+        return view('admin.categories.index', compact('categories', 'breeds'));
+    }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'      => 'required|string|max:100|unique:pet_categories,name',
+            'name'      => 'required|string|max:100|unique:pet_categories,name,NULL,id,deleted_at,NULL',
             'icon'      => 'nullable|string|max:50',
             'is_active' => 'boolean',
         ]);
@@ -46,7 +46,7 @@ class CategoryController extends Controller
     public function update(Request $request, PetCategory $category)
     {
         $data = $request->validate([
-            'name'      => "required|string|max:100|unique:pet_categories,name,{$category->id}",
+            'name'      => "required|string|max:100|unique:pet_categories,name,{$category->id},id,deleted_at,NULL",
             'icon'      => 'nullable|string|max:50',
             'is_active' => 'boolean',
         ]);

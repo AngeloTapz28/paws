@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Payments')
-@section('page-title', 'Payments')
+@section('page-title', 'Payment Records')
 
 @section('breadcrumbs')
     <li class="breadcrumb-item active">Payments</li>
@@ -47,14 +47,22 @@
             <div class="search-wrap">
                 <i class="bi bi-search"></i>
                 <input type="text" name="search" class="form-control form-control-sm"
-                       value="{{ request('search') }}" placeholder="Search by reference #…">
+                       value="{{ request('search') }}" placeholder="Reference number…">
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <select name="status" class="form-select form-select-sm">
-                <option value="">All Statuses</option>
+                <option value="">All Status</option>
                 @foreach(['pending','completed','failed','refunded'] as $s)
                     <option value="{{ $s }}" @selected(request('status') === $s)>{{ ucfirst($s) }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select name="type" class="form-select form-select-sm">
+                <option value="">All Types</option>
+                @foreach(['adoption_fee','donation','other'] as $t)
+                    <option value="{{ $t }}" @selected(request('type') === $t)>{{ ucfirst(str_replace('_',' ',$t)) }}</option>
                 @endforeach
             </select>
         </div>
@@ -79,14 +87,15 @@
         <table class="table mb-0">
             <thead>
                 <tr>
-                    <th style="padding-left:1.25rem;">Reference #</th>
-                    <th>Payer</th>
-                    <th>Application</th>
-                    <th>Amount</th>
-                    <th>Method</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th style="text-align:right; padding-right:1.25rem;"></th>
+                    <th style="padding-left:1.25rem;">REFERENCE #</th>
+                    <th>PAYER</th>
+                    <th>PET</th>
+                    <th>TYPE</th>
+                    <th>METHOD</th>
+                    <th>AMOUNT</th>
+                    <th>STATUS</th>
+                    <th>DATE</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -97,6 +106,8 @@
                             {{ $payment->reference_number ?? '—' }}
                         </span>
                     </td>
+
+                    {{-- Payer --}}
                     <td>
                         <div style="font-size:.855rem; font-weight:500; color:var(--text);">
                             {{ $payment->payer->name ?? '—' }}
@@ -105,15 +116,31 @@
                             {{ $payment->payer->email ?? '' }}
                         </div>
                     </td>
+
+                    {{-- Pet (via application relationship) --}}
                     <td style="font-size:.83rem; color:var(--muted);">
-                        {{ $payment->adoptionApplication->application_number ?? '—' }}
+                        {{ $payment->application?->pet?->name ?? '—' }}
                     </td>
+
+                    {{-- Type --}}
+                    <td>
+                        <span style="font-size:.72rem; font-weight:600; padding:.28em .75em;
+                                     border-radius:20px; background:var(--coral-subtle); color:var(--coral);">
+                            {{ ucfirst(str_replace('_', ' ', $payment->type ?? '—')) }}
+                        </span>
+                    </td>
+
+                    {{-- Method (correct column name is 'method') --}}
+                    <td style="font-size:.83rem; color:var(--muted);">
+                        {{ ucfirst($payment->method ?? '—') }}
+                    </td>
+
+                    {{-- Amount --}}
                     <td>
                         <span class="amount-val">₱{{ number_format($payment->amount, 2) }}</span>
                     </td>
-                    <td style="font-size:.83rem; color:var(--muted);">
-                        {{ ucfirst($payment->payment_method ?? '—') }}
-                    </td>
+
+                    {{-- Status --}}
                     <td>
                         @php
                             $pStyles = [
@@ -128,9 +155,13 @@
                             {{ ucfirst($payment->status) }}
                         </span>
                     </td>
+
+                    {{-- Date --}}
                     <td style="font-size:.8rem; color:var(--muted);">
                         {{ $payment->paid_at?->format('M d, Y') ?? '—' }}
                     </td>
+
+                    {{-- Action --}}
                     <td style="text-align:right; padding-right:1.25rem;">
                         <a href="{{ route('staff.payments.show', $payment) }}" class="action-btn" title="View">
                             <i class="bi bi-eye"></i>
@@ -139,7 +170,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="8">
+                    <td colspan="9">
                         <div class="empty-state py-5">
                             <span class="empty-icon">💳</span>
                             <h5>No Payments Yet</h5>

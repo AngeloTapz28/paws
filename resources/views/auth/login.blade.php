@@ -23,7 +23,7 @@
             flex-direction: column;
         }
 
-        /* Left panel */
+        /* ── Left panel ── */
         .left-panel {
             background: linear-gradient(135deg, var(--navy) 0%, #4A5070 100%);
             min-height: 100vh;
@@ -60,7 +60,7 @@
         .left-stat-num { font-size: 1.5rem; font-weight: 800; color: var(--coral); }
         .left-stat-lbl { font-size: .7rem; opacity: .6; text-transform: uppercase; letter-spacing: .5px; }
 
-        /* Right panel */
+        /* ── Right panel ── */
         .right-panel {
             min-height: 100vh;
             display: flex;
@@ -73,19 +73,20 @@
         .login-box h3 { font-size: 1.5rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
         .login-box p.sub { font-size: .875rem; color: #888; margin-bottom: 28px; }
 
-        /* Form */
+        /* ── Form ── */
         .form-label { font-size: .85rem; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
         .form-control {
             border: 1.5px solid #E5E7EB;
             border-radius: 10px;
             padding: 11px 14px;
             font-size: .9rem;
-            transition: border-color .2s, box-shadow .2s;
+            transition: border-color .2s, box-shadow .2s, transform .15s;
         }
         .form-control:focus {
             border-color: var(--coral);
             box-shadow: 0 0 0 3px rgba(217,119,87,.15);
             outline: none;
+            transform: translateY(-1px);
         }
         .input-icon-wrap { position: relative; }
         .input-icon-wrap .bi {
@@ -93,7 +94,9 @@
             left: 14px; top: 50%;
             transform: translateY(-50%);
             color: #aaa; font-size: .9rem;
+            transition: color .2s;
         }
+        .input-icon-wrap:focus-within .bi { color: var(--coral); }
         .input-icon-wrap .form-control { padding-left: 38px; }
 
         .btn-login {
@@ -105,9 +108,15 @@
             font-size: .95rem;
             font-weight: 600;
             width: 100%;
-            transition: background .2s, transform .15s;
+            transition: background .2s, transform .15s, box-shadow .2s;
         }
-        .btn-login:hover { background: #c4654a; transform: translateY(-1px); color: #fff; }
+        .btn-login:hover {
+            background: #c4654a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(217,119,87,.4);
+            color: #fff;
+        }
+        .btn-login:active { transform: translateY(0); box-shadow: none; }
 
         .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: #ccc; font-size: .8rem; }
         .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #eee; }
@@ -124,7 +133,7 @@
             text-decoration: none;
             transition: all .2s;
         }
-        .btn-register-link:hover { background: var(--coral); color: #fff; }
+        .btn-register-link:hover { background: var(--coral); color: #fff; transform: translateY(-1px); }
 
         .back-link { text-align: center; margin-top: 20px; font-size: .82rem; color: #aaa; }
         .back-link a { color: var(--coral); text-decoration: none; }
@@ -134,6 +143,69 @@
         .form-check-input:checked { background-color: var(--coral); border-color: var(--coral); }
         .forgot-link { font-size: .82rem; color: var(--coral); text-decoration: none; }
         .forgot-link:hover { text-decoration: underline; }
+
+        /* ════════════════════════════════
+           ANIMATIONS
+        ════════════════════════════════ */
+
+        /* Slide in from left */
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-40px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Slide in from right */
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Fade up */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Gentle float for the brand icon */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(-6px); }
+        }
+
+        /* Pulse glow for the sign-in button on load */
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(217,119,87,0); }
+            50%       { box-shadow: 0 0 0 8px rgba(217,119,87,.2); }
+        }
+
+        /* Left panel animates in from left */
+        .left-panel {
+            animation: slideInLeft .6s cubic-bezier(.25,.46,.45,.94) both;
+        }
+
+        /* Brand icon floats gently */
+        .left-brand-icon {
+            animation: float 3.5s ease-in-out infinite;
+        }
+
+        /* Right panel animates in from right, slightly delayed */
+        .right-panel {
+            animation: slideInRight .6s cubic-bezier(.25,.46,.45,.94) .1s both;
+        }
+
+        /* Form elements stagger fade up */
+        .login-box h3       { animation: fadeUp .5s ease .25s both; }
+        .login-box p.sub    { animation: fadeUp .5s ease .32s both; }
+        .login-box .mb-3    { animation: fadeUp .5s ease .38s both; }
+        .login-box .mb-1    { animation: fadeUp .5s ease .44s both; }
+        .remember-row       { animation: fadeUp .5s ease .50s both; }
+        .btn-login          { animation: fadeUp .5s ease .56s both, pulseGlow 2.5s ease 1.2s 2; }
+        .divider            { animation: fadeUp .5s ease .62s both; }
+        .btn-register-link  { animation: fadeUp .5s ease .68s both; }
+        .back-link          { animation: fadeUp .5s ease .74s both; }
+
+        /* Stats count-up handled by JS, but fade them in nicely */
+        .left-stats { animation: fadeUp .5s ease .5s both; }
     </style>
 </head>
 <body>
@@ -148,15 +220,15 @@
                 <p>Log in to your PAWS account and continue your pet adoption journey.</p>
                 <div class="left-stats">
                     <div class="left-stat">
-                        <div class="left-stat-num">{{ \App\Models\Pet::where('status','adopted')->count() }}+</div>
+                        <div class="left-stat-num" data-count="{{ \App\Models\Pet::where('status','adopted')->count() }}" data-suffix="+">0+</div>
                         <div class="left-stat-lbl">Adopted</div>
                     </div>
                     <div class="left-stat">
-                        <div class="left-stat-num">{{ \App\Models\Pet::where('status','available')->count() }}</div>
+                        <div class="left-stat-num" data-count="{{ \App\Models\Pet::where('status','available')->count() }}">0</div>
                         <div class="left-stat-lbl">Available</div>
                     </div>
                     <div class="left-stat">
-                        <div class="left-stat-num">{{ \App\Models\User::whereHas('roles', fn($q)=>$q->where('name','adopter'))->count() }}</div>
+                        <div class="left-stat-num" data-count="{{ \App\Models\User::whereHas('roles', fn($q)=>$q->where('name','adopter'))->count() }}">0</div>
                         <div class="left-stat-lbl">Adopters</div>
                     </div>
                 </div>
@@ -253,5 +325,33 @@
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Count-up animation for stats
+    function countUp(el) {
+        const target = parseInt(el.dataset.count, 10);
+        const suffix = el.dataset.suffix ?? '';
+        const duration = 1200;
+        const step = 16;
+        const increment = target / (duration / step);
+        let current = 0;
+
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                clearInterval(timer);
+                el.textContent = target + suffix;
+            } else {
+                el.textContent = Math.floor(current) + suffix;
+            }
+        }, step);
+    }
+
+    // Start count-up after the left panel animation completes (~600ms)
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            document.querySelectorAll('[data-count]').forEach(countUp);
+        }, 700);
+    });
+</script>
 </body>
 </html>

@@ -21,7 +21,7 @@
             min-height: 100vh;
         }
 
-        /* Left panel */
+        /* ── Left panel ── */
         .left-panel {
             background: linear-gradient(135deg, var(--navy) 0%, #4A5070 100%);
             min-height: 100vh;
@@ -55,11 +55,25 @@
         .left-panel p  { font-size: .9rem; opacity: .75; line-height: 1.75; max-width: 280px; text-align: center; }
 
         .steps-list { margin-top: 32px; text-align: left; width: 100%; max-width: 260px; }
-        .step-item { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-        .step-circle { width: 32px; height: 32px; border-radius: 50%; background: rgba(217,119,87,.3); color: var(--coral); display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 700; flex-shrink: 0; border: 1px solid rgba(217,119,87,.4); }
+        .step-item {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 16px;
+            opacity: 0; /* start hidden — JS will reveal with stagger */
+        }
+        .step-circle {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(217,119,87,.3); color: var(--coral);
+            display: flex; align-items: center; justify-content: center;
+            font-size: .8rem; font-weight: 700; flex-shrink: 0;
+            border: 1px solid rgba(217,119,87,.4);
+            transition: background .3s, transform .3s;
+        }
+        .step-item.visible .step-circle {
+            animation: stepPop .4s cubic-bezier(.34,1.56,.64,1) both;
+        }
         .step-text { font-size: .83rem; opacity: .8; }
 
-        /* Right panel */
+        /* ── Right panel ── */
         .right-panel {
             min-height: 100vh;
             display: flex;
@@ -72,19 +86,20 @@
         .register-box h3 { font-size: 1.5rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
         .register-box p.sub { font-size: .875rem; color: #888; margin-bottom: 28px; }
 
-        /* Form */
+        /* ── Form ── */
         .form-label { font-size: .85rem; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
         .form-control {
             border: 1.5px solid #E5E7EB;
             border-radius: 10px;
             padding: 11px 14px;
             font-size: .9rem;
-            transition: border-color .2s, box-shadow .2s;
+            transition: border-color .2s, box-shadow .2s, transform .15s;
         }
         .form-control:focus {
             border-color: var(--coral);
             box-shadow: 0 0 0 3px rgba(217,119,87,.15);
             outline: none;
+            transform: translateY(-1px);
         }
         .input-icon-wrap { position: relative; }
         .input-icon-wrap .bi {
@@ -92,7 +107,9 @@
             left: 14px; top: 50%;
             transform: translateY(-50%);
             color: #aaa; font-size: .9rem;
+            transition: color .2s;
         }
+        .input-icon-wrap:focus-within .bi { color: var(--coral); }
         .input-icon-wrap .form-control { padding-left: 38px; }
 
         .btn-register {
@@ -104,9 +121,15 @@
             font-size: .95rem;
             font-weight: 600;
             width: 100%;
-            transition: background .2s, transform .15s;
+            transition: background .2s, transform .15s, box-shadow .2s;
         }
-        .btn-register:hover { background: #c4654a; transform: translateY(-1px); color: #fff; }
+        .btn-register:hover {
+            background: #c4654a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(217,119,87,.4);
+            color: #fff;
+        }
+        .btn-register:active { transform: translateY(0); box-shadow: none; }
 
         .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; color: #ccc; font-size: .8rem; }
         .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #eee; }
@@ -123,11 +146,64 @@
             text-decoration: none;
             transition: all .2s;
         }
-        .btn-login-link:hover { background: var(--coral); color: #fff; }
+        .btn-login-link:hover { background: var(--coral); color: #fff; transform: translateY(-1px); }
 
         .back-link { text-align: center; margin-top: 20px; font-size: .82rem; color: #aaa; }
         .back-link a { color: var(--coral); text-decoration: none; }
         .back-link a:hover { text-decoration: underline; }
+
+        /* ════════════════════════════════
+           ANIMATIONS
+        ════════════════════════════════ */
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-40px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(-6px); }
+        }
+
+        @keyframes stepPop {
+            from { opacity: 0; transform: translateX(-16px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(217,119,87,0); }
+            50%       { box-shadow: 0 0 0 8px rgba(217,119,87,.2); }
+        }
+
+        /* Panel entrance */
+        .left-panel  { animation: slideInLeft  .6s cubic-bezier(.25,.46,.45,.94) both; }
+        .right-panel { animation: slideInRight .6s cubic-bezier(.25,.46,.45,.94) .1s both; }
+
+        /* Brand icon float */
+        .left-brand-icon { animation: float 3.5s ease-in-out infinite; }
+
+        /* Right panel form stagger */
+        .register-box h3           { animation: fadeUp .5s ease .25s both; }
+        .register-box p.sub        { animation: fadeUp .5s ease .32s both; }
+        .register-box .mb-3:nth-child(1) { animation: fadeUp .5s ease .38s both; }
+        .register-box .mb-3:nth-child(2) { animation: fadeUp .5s ease .44s both; }
+        .register-box .mb-3:nth-child(3) { animation: fadeUp .5s ease .50s both; }
+        .register-box .mb-4        { animation: fadeUp .5s ease .56s both; }
+        .btn-register              { animation: fadeUp .5s ease .62s both, pulseGlow 2.5s ease 1.3s 2; }
+        .divider                   { animation: fadeUp .5s ease .68s both; }
+        .btn-login-link            { animation: fadeUp .5s ease .74s both; }
+        .back-link                 { animation: fadeUp .5s ease .80s both; }
     </style>
 </head>
 <body>
@@ -258,5 +334,17 @@
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Stagger the step items on the left panel with a slight delay each
+    window.addEventListener('load', () => {
+        const steps = document.querySelectorAll('.step-item');
+        steps.forEach((step, i) => {
+            setTimeout(() => {
+                step.style.animation = `stepPop .45s cubic-bezier(.34,1.56,.64,1) both`;
+                step.classList.add('visible');
+            }, 600 + (i * 150)); // starts after panel animates in
+        });
+    });
+</script>
 </body>
 </html>

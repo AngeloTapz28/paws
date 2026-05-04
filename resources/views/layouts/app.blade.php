@@ -658,7 +658,15 @@
                     <div class="fw-semibold" style="font-size:.85rem; color:var(--navy);">{{ auth()->user()->name }}</div>
                     <div style="font-size:.73rem; color:var(--muted);">{{ auth()->user()->email }}</div>
                 </li>
-                <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2" style="color:var(--coral);"></i>Profile</a></li>
+                <li class="px-3 pt-2 pb-1">
+    <span style="font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--muted);">Role</span>
+    <div class="mt-1">
+        <span style="display:inline-flex; align-items:center; gap:.35rem; background:var(--coral-subtle); color:var(--coral); font-size:.75rem; font-weight:600; padding:.25rem .65rem; border-radius:20px;">
+            <i class="bi bi-shield-check"></i>
+            {{ auth()->user()->getPrimaryRole()?->display_name ?? 'No Role' }}
+        </span>
+    </div>
+</li>
                 <li><hr class="dropdown-divider" style="border-color:var(--border);"></li>
                 <li>
                     <form action="{{ route('logout') }}" method="POST">

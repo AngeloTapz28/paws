@@ -137,14 +137,6 @@
                             </span>
                             @endif
                         </div>
-                        @if($application->pet)
-                        <div class="mt-3">
-                            <a href="{{ route('adopter.pets.show', $application->pet) }}"
-                               class="btn btn-sm btn-outline-secondary" style="font-size:.78rem;">
-                                <i class="bi bi-eye me-1"></i> View Pet Profile
-                            </a>
-                        </div>
-                        @endif
                     </div>
                 </div>
             </div>

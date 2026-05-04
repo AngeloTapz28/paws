@@ -9,7 +9,7 @@
 
 @push('styles')
 <style>
-    /* Timeline */
+    /* ── Timeline ── */
     .timeline { position: relative; padding-left: 2rem; }
     .timeline::before {
         content: ''; position: absolute; left: .55rem; top: 4px; bottom: 4px;
@@ -21,18 +21,28 @@
         position: absolute; left: -1.53rem; top: .2rem;
         width: 14px; height: 14px; border-radius: 50%;
         border: 2.5px solid var(--white); box-shadow: 0 0 0 2px var(--border);
+        transform: scale(0);
+        transition: transform .4s cubic-bezier(.34,1.56,.64,1);
     }
+    .timeline-dot.revealed { transform: scale(1); }
     .timeline-dot.dot-coral  { background: var(--coral); box-shadow: 0 0 0 2px var(--coral-light); }
     .timeline-dot.dot-sage   { background: var(--sage);  box-shadow: 0 0 0 2px var(--sage-light); }
     .timeline-dot.dot-gold   { background: var(--gold);  box-shadow: 0 0 0 2px var(--gold-light); }
     .timeline-dot.dot-navy   { background: var(--navy);  box-shadow: 0 0 0 2px rgba(45,49,71,.15); }
     .timeline-dot.dot-danger { background: #C0392B;      box-shadow: 0 0 0 2px #FEF0EE; }
 
-    /* Info label pairs */
+    /* Timeline text fade-in */
+    .timeline-item .tl-content {
+        opacity: 0; transform: translateX(-8px);
+        transition: opacity .35s ease, transform .35s ease;
+    }
+    .timeline-item.revealed .tl-content { opacity: 1; transform: translateX(0); }
+
+    /* ── Info label pairs ── */
     .info-label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: .2rem; }
     .info-value { font-size: .875rem; font-weight: 500; color: var(--text); }
 
-    /* Section header */
+    /* ── Section pill ── */
     .section-pill {
         display: inline-flex; align-items: center; gap: .4rem;
         background: var(--coral-subtle); color: var(--coral);
@@ -40,15 +50,68 @@
         letter-spacing: .07em; padding: .22rem .7rem; border-radius: 20px; margin-bottom: .5rem;
     }
 
-    /* Action buttons in panel */
-    .action-panel .btn { border-radius: 9px; font-size: .85rem; }
+    /* ── Action buttons ── */
+    .action-panel .btn { border-radius: 9px; font-size: .85rem; transition: transform .15s, box-shadow .15s; }
+    .action-panel .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,.1); }
+
+    /* ── Pet image hover ── */
+    .pet-image {
+        transition: transform .2s, box-shadow .2s;
+    }
+    .pet-image:hover { transform: scale(1.03); box-shadow: var(--shadow-md); }
+
+    /* ════════════════════════════════
+       ANIMATIONS
+    ════════════════════════════════ */
+
+    @keyframes fadeDown {
+        from { opacity: 0; transform: translateY(-12px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(18px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInLeft {
+        from { opacity: 0; transform: translateX(-20px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(20px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes badgePop {
+        0%   { transform: scale(0.5); opacity: 0; }
+        70%  { transform: scale(1.1); }
+        100% { transform: scale(1);   opacity: 1; }
+    }
+
+    /* Header bar */
+    .header-bar { animation: fadeDown .45s ease both; }
+
+    /* Status badge */
+    .status-badge-anim { animation: badgePop .5s cubic-bezier(.34,1.56,.64,1) .3s both; }
+
+    /* Left column cards stagger */
+    .card-pet      { opacity: 0; animation: slideInLeft .45s ease .2s both; }
+    .card-adopter  { opacity: 0; animation: slideInLeft .45s ease .32s both; }
+    .card-answers  { opacity: 0; animation: slideInLeft .45s ease .44s both; }
+    .card-payments { opacity: 0; animation: slideInLeft .45s ease .56s both; }
+
+    /* Right column cards stagger */
+    .card-actions  { opacity: 0; animation: slideInRight .45s ease .25s both; }
+    .card-timeline { opacity: 0; animation: slideInRight .45s ease .4s both; }
 </style>
 @endpush
 
 @section('content')
 
-{{-- Page header bar --}}
-<div class="d-flex flex-wrap align-items-center gap-3 mb-4 p-3 rounded-3"
+{{-- ── Page header bar ── --}}
+<div class="header-bar d-flex flex-wrap align-items-center gap-3 mb-4 p-3 rounded-3"
      style="background:var(--white); border:1px solid var(--border); box-shadow:var(--shadow-sm);">
     <a href="{{ url()->previous() }}" class="btn btn-sm btn-outline-secondary" style="flex-shrink:0;">
         <i class="bi bi-arrow-left me-1"></i> Back
@@ -74,7 +137,7 @@
                 'cancelled'    => 'secondary',
             ];
         @endphp
-        <span class="badge bg-{{ $badgeMap[$application->status] ?? 'secondary' }}"
+        <span class="badge bg-{{ $badgeMap[$application->status] ?? 'secondary' }} status-badge-anim"
               style="font-size:.8rem; padding:.45em 1em;">
             {{ ucfirst($application->status) }}
         </span>
@@ -83,11 +146,11 @@
 
 <div class="row g-3">
 
-    {{-- LEFT COLUMN --}}
+    {{-- ── LEFT COLUMN ── --}}
     <div class="col-lg-8 d-flex flex-column gap-3">
 
         {{-- Pet Info --}}
-        <div class="card">
+        <div class="card card-pet">
             <div class="card-header" style="padding:1rem 1.25rem;">
                 <div class="section-pill"><i class="bi bi-heart-fill"></i> Pet</div>
                 <h6 class="mb-0 fw-bold" style="color:var(--navy);">Pet Information</h6>
@@ -95,7 +158,8 @@
             <div class="card-body" style="padding:1.25rem;">
                 <div class="d-flex gap-4">
                     @if($application->pet?->primary_image)
-                                <img src="{{ Storage::url($application->pet?->primary_image) }}"
+                        <img src="{{ Storage::url($application->pet?->primary_image) }}"
+                             class="pet-image"
                              style="width:110px;height:110px;border-radius:var(--radius);object-fit:cover;
                                     border:2px solid var(--border);flex-shrink:0;" alt="">
                     @else
@@ -126,7 +190,7 @@
         </div>
 
         {{-- Adopter Info --}}
-        <div class="card">
+        <div class="card card-adopter">
             <div class="card-header" style="padding:1rem 1.25rem;">
                 <div class="section-pill"><i class="bi bi-person-fill"></i> Adopter</div>
                 <h6 class="mb-0 fw-bold" style="color:var(--navy);">Adopter Information</h6>
@@ -154,7 +218,7 @@
         </div>
 
         {{-- Application Answers --}}
-        <div class="card">
+        <div class="card card-answers">
             <div class="card-header" style="padding:1rem 1.25rem;">
                 <div class="section-pill"><i class="bi bi-card-list"></i> Answers</div>
                 <h6 class="mb-0 fw-bold" style="color:var(--navy);">Application Answers</h6>
@@ -189,7 +253,7 @@
 
         {{-- Payments --}}
         @if($application->payments->count())
-        <div class="card">
+        <div class="card card-payments">
             <div class="card-header" style="padding:1rem 1.25rem;">
                 <div class="section-pill" style="background:var(--sage-light);color:#2D5A3D;"><i class="bi bi-cash-stack"></i> Payments</div>
                 <h6 class="mb-0 fw-bold" style="color:var(--navy);">Payment Records</h6>
@@ -233,12 +297,12 @@
 
     </div>
 
-    {{-- RIGHT COLUMN --}}
+    {{-- ── RIGHT COLUMN ── --}}
     <div class="col-lg-4 d-flex flex-column gap-3">
 
         {{-- Action Panel --}}
         @if(in_array($application->status, ['pending','submitted','reviewing','under_review','interview']))
-        <div class="card" style="border-top: 3px solid var(--coral);">
+        <div class="card card-actions" style="border-top: 3px solid var(--coral);">
             <div class="card-header" style="padding:1rem 1.25rem;">
                 <div class="section-pill" style="background:var(--gold-light);color:#7A5A1A;"><i class="bi bi-lightning-fill"></i> Actions</div>
                 <h6 class="mb-0 fw-bold" style="color:var(--navy);">Review Actions</h6>
@@ -269,27 +333,32 @@
         @endif
 
         {{-- Timeline --}}
-        <div class="card">
+        <div class="card card-timeline">
             <div class="card-header" style="padding:1rem 1.25rem;">
                 <div class="section-pill" style="background:rgba(45,49,71,.07);color:var(--navy);"><i class="bi bi-clock-history"></i> History</div>
                 <h6 class="mb-0 fw-bold" style="color:var(--navy);">Application Timeline</h6>
             </div>
             <div class="card-body" style="padding:1.25rem;">
-                <div class="timeline">
+                <div class="timeline" id="timeline">
+
                     <div class="timeline-item">
                         <div class="timeline-dot dot-coral"></div>
-                        <div style="font-size:.83rem; font-weight:600; color:var(--navy);">Application Submitted</div>
-                        <div style="font-size:.75rem; color:var(--muted); margin-top:.1rem;">
-                            {{ $application->created_at->format('M d, Y h:i A') }}
+                        <div class="tl-content">
+                            <div style="font-size:.83rem; font-weight:600; color:var(--navy);">Application Submitted</div>
+                            <div style="font-size:.75rem; color:var(--muted); margin-top:.1rem;">
+                                {{ $application->created_at->format('M d, Y h:i A') }}
+                            </div>
                         </div>
                     </div>
 
                     @if($application->reviewed_at)
                     <div class="timeline-item">
                         <div class="timeline-dot dot-gold"></div>
-                        <div style="font-size:.83rem; font-weight:600; color:var(--navy);">Under Review</div>
-                        <div style="font-size:.75rem; color:var(--muted); margin-top:.1rem;">
-                            {{ $application->reviewed_at->format('M d, Y h:i A') }}
+                        <div class="tl-content">
+                            <div style="font-size:.83rem; font-weight:600; color:var(--navy);">Under Review</div>
+                            <div style="font-size:.75rem; color:var(--muted); margin-top:.1rem;">
+                                {{ $application->reviewed_at->format('M d, Y h:i A') }}
+                            </div>
                         </div>
                     </div>
                     @endif
@@ -297,9 +366,11 @@
                     @if($application->approved_at)
                     <div class="timeline-item">
                         <div class="timeline-dot dot-sage"></div>
-                        <div style="font-size:.83rem; font-weight:600; color:#2D5A3D;">Approved ✓</div>
-                        <div style="font-size:.75rem; color:var(--muted); margin-top:.1rem;">
-                            {{ $application->approved_at->format('M d, Y h:i A') }}
+                        <div class="tl-content">
+                            <div style="font-size:.83rem; font-weight:600; color:#2D5A3D;">Approved ✓</div>
+                            <div style="font-size:.75rem; color:var(--muted); margin-top:.1rem;">
+                                {{ $application->approved_at->format('M d, Y h:i A') }}
+                            </div>
                         </div>
                     </div>
                     @endif
@@ -307,27 +378,32 @@
                     @if($application->rejected_at)
                     <div class="timeline-item">
                         <div class="timeline-dot dot-danger"></div>
-                        <div style="font-size:.83rem; font-weight:600; color:#C0392B;">Rejected</div>
-                        <div style="font-size:.75rem; color:var(--muted); margin-top:.1rem;">
-                            {{ $application->rejected_at->format('M d, Y h:i A') }}
+                        <div class="tl-content">
+                            <div style="font-size:.83rem; font-weight:600; color:#C0392B;">Rejected</div>
+                            <div style="font-size:.75rem; color:var(--muted); margin-top:.1rem;">
+                                {{ $application->rejected_at->format('M d, Y h:i A') }}
+                            </div>
+                            @if($application->rejection_reason)
+                            <div style="font-size:.75rem; color:var(--muted); font-style:italic; margin-top:.3rem; padding:.5rem .75rem; background:var(--bg); border-radius:7px; border-left:3px solid #C0392B;">
+                                {{ $application->rejection_reason }}
+                            </div>
+                            @endif
                         </div>
-                        @if($application->rejection_reason)
-                        <div style="font-size:.75rem; color:var(--muted); font-style:italic; margin-top:.3rem; padding:.5rem .75rem; background:var(--bg); border-radius:7px; border-left:3px solid #C0392B;">
-                            {{ $application->rejection_reason }}
-                        </div>
-                        @endif
                     </div>
                     @endif
 
                     @if($application->completed_at)
                     <div class="timeline-item">
                         <div class="timeline-dot dot-sage"></div>
-                        <div style="font-size:.83rem; font-weight:600; color:#2D5A3D;">Adoption Completed 🎉</div>
-                        <div style="font-size:.75rem; color:var(--muted); margin-top:.1rem;">
-                            {{ $application->completed_at->format('M d, Y h:i A') }}
+                        <div class="tl-content">
+                            <div style="font-size:.83rem; font-weight:600; color:#2D5A3D;">Adoption Completed 🎉</div>
+                            <div style="font-size:.75rem; color:var(--muted); margin-top:.1rem;">
+                                {{ $application->completed_at->format('M d, Y h:i A') }}
+                            </div>
                         </div>
                     </div>
                     @endif
+
                 </div>
             </div>
         </div>
@@ -335,7 +411,7 @@
     </div>
 </div>
 
-{{-- Approve Modal --}}
+{{-- ── Approve Modal ── --}}
 <div class="modal fade" id="approveModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius:var(--radius); border:none; box-shadow:var(--shadow-md);">
@@ -368,7 +444,7 @@
     </div>
 </div>
 
-{{-- Reject Modal --}}
+{{-- ── Reject Modal ── --}}
 <div class="modal fade" id="rejectModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius:var(--radius); border:none; box-shadow:var(--shadow-md);">
@@ -399,3 +475,22 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // ── Stagger timeline items: dot pops, then text slides in ──
+    const items = document.querySelectorAll('.timeline-item');
+    items.forEach((item, i) => {
+        setTimeout(() => {
+            // Dot pops in first
+            item.querySelector('.timeline-dot')?.classList.add('revealed');
+            // Then text fades in 100ms later
+            setTimeout(() => item.classList.add('revealed'), 100);
+        }, 700 + (i * 200)); // starts after right column card animates in
+    });
+
+});
+</script>
+@endpush
