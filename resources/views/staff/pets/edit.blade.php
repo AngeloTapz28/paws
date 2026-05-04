@@ -11,7 +11,6 @@
 
 @push('styles')
 <style>
-    /* ── Section header ── */
     .section-hdr {
         display: flex; align-items: center; gap: .5rem;
         font-size: .78rem; font-weight: 700; text-transform: uppercase;
@@ -24,17 +23,13 @@
         display: flex; align-items: center; justify-content: center; font-size: .78rem;
         flex-shrink: 0;
     }
-
-    /* ── Photo card ── */
     .photo-preview {
         width: 100%; height: 200px; object-fit: cover;
-        border-radius: var(--radius-sm); display: block;
-        transition: transform .3s ease;
+        border-radius: var(--radius-sm); display: block; transition: transform .3s ease;
     }
     .photo-preview:hover { transform: scale(1.02); }
     .photo-placeholder {
-        height: 200px; background: var(--coral-light);
-        border-radius: var(--radius-sm);
+        height: 200px; background: var(--coral-light); border-radius: var(--radius-sm);
         display: flex; align-items: center; justify-content: center;
         font-size: 3rem; cursor: pointer; transition: background .2s;
     }
@@ -47,8 +42,6 @@
         cursor: pointer; transition: all .15s;
     }
     .btn-change-photo:hover { border-color: var(--coral); color: var(--coral); background: var(--coral-subtle); }
-
-    /* ── Form controls ── */
     .form-label { font-size: .8rem; font-weight: 600; color: var(--navy-mid); margin-bottom: .35rem; }
     .form-control, .form-select {
         border: 1.5px solid var(--border); border-radius: var(--radius-sm);
@@ -59,8 +52,6 @@
         outline: none; transform: translateY(-1px);
     }
     .form-check-input:checked { background-color: var(--coral); border-color: var(--coral); }
-
-    /* ── Save button ── */
     .btn-save {
         background: var(--coral); color: #fff; border: none;
         border-radius: 20px; padding: .6rem 1.75rem;
@@ -68,65 +59,30 @@
         transition: background .2s, transform .15s, box-shadow .2s;
         display: inline-flex; align-items: center; gap: .4rem;
     }
-    .btn-save:hover {
-        background: var(--coral-dark); color: #fff;
-        transform: translateY(-1px); box-shadow: 0 5px 16px rgba(217,119,87,.35);
-    }
+    .btn-save:hover { background: var(--coral-dark); color: #fff; transform: translateY(-1px); box-shadow: 0 5px 16px rgba(217,119,87,.35); }
 
-    /* ════════════════════════════════
-       ANIMATIONS
-    ════════════════════════════════ */
+    @keyframes fadeDown   { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes slideInLeft  { from { opacity:0; transform:translateX(-22px); } to { opacity:1; transform:translateX(0); } }
+    @keyframes slideInRight { from { opacity:0; transform:translateX(22px);  } to { opacity:1; transform:translateX(0); } }
+    @keyframes fieldIn    { from { opacity:0; transform:translateY(10px);  } to { opacity:1; transform:translateY(0); } }
+    @keyframes imageReveal{ from { opacity:0; transform:scale(.95);        } to { opacity:1; transform:scale(1);      } }
+    @keyframes pulseGlow  { 0%,100% { box-shadow:0 0 0 0 rgba(217,119,87,0); } 50% { box-shadow:0 0 0 8px rgba(217,119,87,.2); } }
 
-    @keyframes fadeDown {
-        from { opacity: 0; transform: translateY(-12px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes slideInLeft {
-        from { opacity: 0; transform: translateX(-22px); }
-        to   { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes slideInRight {
-        from { opacity: 0; transform: translateX(22px); }
-        to   { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes fieldIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes imageReveal {
-        from { opacity: 0; transform: scale(.95); }
-        to   { opacity: 1; transform: scale(1); }
-    }
-    @keyframes pulseGlow {
-        0%, 100% { box-shadow: 0 0 0 0 rgba(217,119,87,0); }
-        50%       { box-shadow: 0 0 0 8px rgba(217,119,87,.2); }
-    }
-
-    /* Header bar */
-    .header-bar { animation: fadeDown .4s ease both; }
-
-    /* Photo card */
-    .card-photo  { opacity: 0; animation: slideInLeft  .45s ease .15s both; }
-    .photo-preview, .photo-placeholder { animation: imageReveal .5s ease .25s both; opacity: 0; animation-fill-mode: forwards; }
-
-    /* Form cards stagger from right */
-    .card-basic   { opacity: 0; animation: slideInRight .45s ease .2s  both; }
-    .card-health  { opacity: 0; animation: slideInRight .45s ease .35s both; }
-    .card-desc    { opacity: 0; animation: slideInRight .45s ease .48s both; }
-    .card-submit  { opacity: 0; animation: slideInRight .45s ease .60s both; }
-
-    /* Field groups stagger — JS */
-    .field-group { opacity: 0; }
+    .header-bar  { animation: fadeDown .4s ease both; }
+    .card-photo  { opacity:0; animation: slideInLeft  .45s ease .15s both; }
+    .photo-preview, .photo-placeholder { animation: imageReveal .5s ease .25s both; opacity:0; animation-fill-mode:forwards; }
+    .card-basic  { opacity:0; animation: slideInRight .45s ease .2s  both; }
+    .card-health { opacity:0; animation: slideInRight .45s ease .35s both; }
+    .card-desc   { opacity:0; animation: slideInRight .45s ease .48s both; }
+    .card-submit { opacity:0; animation: slideInRight .45s ease .60s both; }
+    .field-group { opacity:0; }
     .field-group.visible { animation: fieldIn .35s ease both; }
-
-    /* Save button pulse */
     .btn-save { animation: pulseGlow 2.5s ease 1.5s 2; }
 </style>
 @endpush
 
 @section('content')
 
-{{-- ── Header bar ── --}}
 <div class="header-bar d-flex align-items-center gap-3 mb-4">
     <a href="{{ route('staff.pets.show', $pet) }}" class="btn btn-sm btn-outline-secondary">
         <i class="bi bi-arrow-left me-1"></i> Back
@@ -151,12 +107,12 @@
                         <img src="{{ Storage::url($pet->primary_image) }}"
                              class="photo-preview mb-3" id="previewImg" alt="{{ $pet->name }}">
                     @else
-                        <div class="photo-placeholder mb-3" id="previewPlaceholder" onclick="document.getElementById('photoInput').click()">
+                        <div class="photo-placeholder mb-3" id="previewPlaceholder"
+                             onclick="document.getElementById('photoInput').click()">
                             <i class="bi bi-camera" style="color:var(--coral); opacity:.5;"></i>
                         </div>
                         <img src="" class="photo-preview mb-3 d-none" id="previewImg" alt="">
                     @endif
-
                     <label class="btn-change-photo" for="photoInput">
                         <i class="bi bi-upload"></i> Change Photo
                     </label>
@@ -180,6 +136,7 @@
                 </div>
                 <div class="card-body p-4">
                     <div class="row g-3">
+
                         <div class="col-md-6 field-group" data-idx="0">
                             <label class="form-label">Pet Name <span class="text-danger">*</span></label>
                             <input type="text" name="name"
@@ -187,6 +144,7 @@
                                    value="{{ old('name', $pet->name) }}" required>
                             @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
+
                         <div class="col-md-6 field-group" data-idx="1">
                             <label class="form-label">Gender <span class="text-danger">*</span></label>
                             <select name="gender" class="form-select @error('gender') is-invalid @enderror" required>
@@ -196,6 +154,7 @@
                             </select>
                             @error('gender')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
+
                         <div class="col-md-6 field-group" data-idx="2">
                             <label class="form-label">Category <span class="text-danger">*</span></label>
                             <select name="pet_category_id" id="categorySelect"
@@ -209,6 +168,7 @@
                             </select>
                             @error('pet_category_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
+
                         <div class="col-md-6 field-group" data-idx="3">
                             <label class="form-label">Breed</label>
                             <select name="breed_id" id="breedSelect" class="form-select">
@@ -222,27 +182,46 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4 field-group" data-idx="4">
-                            <label class="form-label">Age <span class="text-danger">*</span></label>
-                            <input type="number" name="age" min="0" step="1"
-                                   class="form-control @error('age') is-invalid @enderror"
-                                   value="{{ old('age', $pet->age) }}" required>
-                            @error('age')<div class="invalid-feedback">{{ $message }}</div>@enderror
+
+                        {{-- Date of Birth replaces age + age_unit ── --}}
+                        <div class="col-md-6 field-group" data-idx="4">
+                            <label class="form-label">Date of Birth</label>
+                            <input type="date" name="date_of_birth" class="form-control"
+                                   value="{{ old('date_of_birth', $pet->date_of_birth?->format('Y-m-d')) }}"
+                                   max="{{ date('Y-m-d') }}">
+                            @if($pet->date_of_birth)
+                            <div style="font-size:.72rem; color:var(--muted); margin-top:.3rem;">
+                                Current age: <strong>{{ $pet->age }}</strong>
+                            </div>
+                            @endif
                         </div>
-                        <div class="col-md-4 field-group" data-idx="5">
-                            <label class="form-label">Age Unit <span class="text-danger">*</span></label>
-                            <select name="age_unit" class="form-select">
-                                <option value="months" @selected(old('age_unit', $pet->age_unit) === 'months')>Months</option>
-                                <option value="years"  @selected(old('age_unit', $pet->age_unit) === 'years')>Years</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4 field-group" data-idx="6">
+
+                        <div class="col-md-6 field-group" data-idx="5">
                             <label class="form-label">Weight (kg)</label>
                             <input type="number" name="weight" min="0" step="0.1"
                                    class="form-control" value="{{ old('weight', $pet->weight) }}"
                                    placeholder="e.g. 10.00">
                         </div>
+
+                        <div class="col-md-6 field-group" data-idx="6">
+                            <label class="form-label">Size</label>
+                            <select name="size" class="form-select">
+                                <option value="">— Select size —</option>
+                                @foreach(['small','medium','large','extra_large'] as $s)
+                                    <option value="{{ $s }}" @selected(old('size', $pet->size) === $s)>
+                                        {{ ucfirst(str_replace('_', ' ', $s)) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="col-md-6 field-group" data-idx="7">
+                            <label class="form-label">Color</label>
+                            <input type="text" name="color" class="form-control"
+                                   value="{{ old('color', $pet->color) }}" placeholder="e.g. Brown, White">
+                        </div>
+
+                        <div class="col-md-6 field-group" data-idx="8">
                             <label class="form-label">Fee Type <span class="text-danger">*</span></label>
                             <select name="adoption_fee_type" id="feeType" class="form-select">
                                 <option value="fixed"    @selected(old('adoption_fee_type', $pet->adoption_fee_type) === 'fixed')>Fixed Fee</option>
@@ -250,7 +229,8 @@
                                 <option value="free"     @selected(old('adoption_fee_type', $pet->adoption_fee_type) === 'free')>Free</option>
                             </select>
                         </div>
-                        <div class="col-md-6 field-group" data-idx="8" id="feeAmountWrapper">
+
+                        <div class="col-md-6 field-group" data-idx="9" id="feeAmountWrapper">
                             <label class="form-label">Adoption Fee (₱)</label>
                             <input type="number" name="adoption_fee" min="0" step="0.01"
                                    class="form-control @error('adoption_fee') is-invalid @enderror"
@@ -258,7 +238,8 @@
                                    placeholder="0.00">
                             @error('adoption_fee')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
-                        <div class="col-md-6 field-group" data-idx="9">
+
+                        <div class="col-md-6 field-group" data-idx="10">
                             <label class="form-label">Status <span class="text-danger">*</span></label>
                             <select name="status" class="form-select @error('status') is-invalid @enderror" required>
                                 <option value="available"       @selected(old('status', $pet->status) === 'available')>Available</option>
@@ -268,6 +249,7 @@
                             </select>
                             @error('status')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -283,24 +265,21 @@
                         <div class="col-md-4">
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" name="is_vaccinated"
-                                       value="1" id="isVaccinated"
-                                       @checked(old('is_vaccinated', $pet->is_vaccinated))>
+                                       value="1" id="isVaccinated" @checked(old('is_vaccinated', $pet->is_vaccinated))>
                                 <label class="form-check-label" for="isVaccinated" style="font-size:.855rem;">Vaccinated</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" name="is_neutered"
-                                       value="1" id="isNeutered"
-                                       @checked(old('is_neutered', $pet->is_neutered))>
+                                       value="1" id="isNeutered" @checked(old('is_neutered', $pet->is_neutered))>
                                 <label class="form-check-label" for="isNeutered" style="font-size:.855rem;">Neutered/Spayed</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" name="is_microchipped"
-                                       value="1" id="isMicrochipped"
-                                       @checked(old('is_microchipped', $pet->is_microchipped))>
+                                       value="1" id="isMicrochipped" @checked(old('is_microchipped', $pet->is_microchipped))>
                                 <label class="form-check-label" for="isMicrochipped" style="font-size:.855rem;">Microchipped</label>
                             </div>
                         </div>
@@ -350,7 +329,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ── Image preview on file select ──
+    // ── Image preview ──
     document.getElementById('photoInput').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (!file) return;

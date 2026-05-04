@@ -216,7 +216,12 @@
                     </div>
                     <div class="info-row">
                         <dt>Age</dt>
-                        <dd>{{ $pet->age_label ?? ($pet->age ? $pet->age . ' yrs' : '—') }}</dd>
+                        {{-- $pet->age accessor already returns formatted string e.g. "2 yrs" ── --}}
+                        <dd>{{ $pet->age ?? '—' }}</dd>
+                    </div>
+                    <div class="info-row">
+                        <dt>Date of Birth</dt>
+                        <dd>{{ $pet->date_of_birth?->format('M d, Y') ?? '—' }}</dd>
                     </div>
                     <div class="info-row">
                         <dt>Size</dt>
@@ -233,7 +238,7 @@
                     <div class="info-row">
                         <dt>Adoption Fee</dt>
                         <dd style="font-weight:700; color:var(--coral);">
-                            ₱{{ number_format($pet->adoption_fee, 2) }}
+                            {{ $pet->adoption_fee_display }}
                         </dd>
                     </div>
                     <div class="info-row">

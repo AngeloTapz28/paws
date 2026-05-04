@@ -249,7 +249,14 @@
                                     <td><span class="app-number">{{ $app->application_number }}</span></td>
                                     <td>
                                         <div class="d-flex align-items-center gap-2">
-                                            <img src="{{ $app->pet?->primary_image_url ?? asset('images/no-pet.png') }}" class="pet-thumb" alt="">
+                                            @if($app->pet?->primary_image)
+    <img src="{{ $app->pet->primary_image_url }}" class="pet-thumb" alt="">
+@else
+    <div class="pet-thumb d-flex align-items-center justify-content-center"
+         style="background:var(--coral-light); border-radius:8px; font-size:1.1rem;">
+        🐾
+    </div>
+@endif
                                             <span style="font-weight:600; font-size:.85rem;">{{ $app->pet?->name ?? 'Deleted Pet' }}</span>
                                         </div>
                                     </td>

@@ -347,7 +347,19 @@
                         </div>
                         <div class="act-time">{{ $app->created_at->diffForHumans() }}</div>
                     </div>
-                    <span class="act-badge bg-{{ $app->status_badge }}">{{ $app->status_label }}</span>
+                    @php
+    $statusStyle = match($app->status) {
+        'pending', 'submitted'              => 'background:var(--gold-light); color:#7A5A1A;',
+        'reviewing', 'under_review'         => 'background:var(--coral-subtle); color:var(--coral-dark);',
+        'interview'                         => 'background:rgba(45,49,71,.08); color:var(--navy);',
+        'approved'                          => 'background:var(--sage-light); color:#2D5A3D;',
+        'completed'                         => 'background:var(--sage-light); color:#2D5A3D;',
+        'rejected'                          => 'background:#FEF0EE; color:#8B2516;',
+        'withdrawn', 'cancelled','returned' => 'background:#F3F4F6; color:#6B7280;',
+        default                             => 'background:var(--bg); color:var(--muted);',
+    };
+@endphp
+<span class="act-badge" style="{{ $statusStyle }}">{{ $app->status_label }}</span>
                 </div>
                 @endforeach
             @endif

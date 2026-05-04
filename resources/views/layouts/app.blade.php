@@ -120,7 +120,6 @@
             margin-bottom: .15rem;
         }
 
-        /* Soft light circle decoration */
         #sidebar .sidebar-hero::before {
             content: '';
             position: absolute;
@@ -241,7 +240,6 @@
             color: var(--coral);
         }
 
-        /* Chevron on the right via pseudo-element */
         #sidebar .nav-link .nav-chevron {
             margin-left: auto;
             font-size: .7rem;
@@ -256,7 +254,7 @@
             transform: translateX(2px);
         }
 
-        /* Badge pill (for notifications count) */
+        /* Badge pill */
         #sidebar .nav-badge {
             font-size: .62rem;
             font-weight: 700;
@@ -338,9 +336,7 @@
             position: relative;
         }
 
-        #sidebar .user-card .uc-bell:hover {
-            background: var(--coral-light);
-        }
+        #sidebar .user-card .uc-bell:hover { background: var(--coral-light); }
 
         #sidebar .user-card .uc-bell-dot {
             position: absolute;
@@ -534,6 +530,74 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        /* ════════════════════════════════
+           SIDEBAR ENTRANCE ANIMATIONS
+        ════════════════════════════════ */
+
+        @keyframes sidebarSlideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes brandFadeDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes heroScale {
+            from { opacity: 0; transform: scale(.96) translateY(8px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes navItemSlide {
+            from { opacity: 0; transform: translateX(-12px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes userCardUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Sidebar panel slides in */
+        #sidebar {
+            animation: sidebarSlideIn .4s cubic-bezier(.25,.46,.45,.94) both;
+        }
+
+        /* Brand fades down */
+        #sidebar .sidebar-brand {
+            opacity: 0;
+            animation: brandFadeDown .4s ease .2s both;
+        }
+
+        /* Hero card scales up */
+        #sidebar .sidebar-hero {
+            opacity: 0;
+            animation: heroScale .45s cubic-bezier(.25,.46,.45,.94) .32s both;
+        }
+
+        /* Section labels + nav links start hidden; JS reveals with stagger */
+        #sidebar .nav-section-label,
+        #sidebar .nav-link {
+            opacity: 0;
+        }
+        #sidebar .nav-section-label.sb-visible,
+        #sidebar .nav-link.sb-visible {
+            animation: navItemSlide .35s ease both;
+        }
+
+        /* User card slides up */
+        #sidebar .user-card {
+            opacity: 0;
+            animation: userCardUp .4s ease both;
+        }
+
+        /* On mobile (open class), skip entrance animations */
+        @media (max-width: 768px) {
+            #sidebar { animation: none; }
+            #sidebar .sidebar-brand,
+            #sidebar .sidebar-hero,
+            #sidebar .nav-section-label,
+            #sidebar .nav-link,
+            #sidebar .user-card { opacity: 1; animation: none; }
+        }
     </style>
 
     @stack('styles')
@@ -659,14 +723,14 @@
                     <div style="font-size:.73rem; color:var(--muted);">{{ auth()->user()->email }}</div>
                 </li>
                 <li class="px-3 pt-2 pb-1">
-    <span style="font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--muted);">Role</span>
-    <div class="mt-1">
-        <span style="display:inline-flex; align-items:center; gap:.35rem; background:var(--coral-subtle); color:var(--coral); font-size:.75rem; font-weight:600; padding:.25rem .65rem; border-radius:20px;">
-            <i class="bi bi-shield-check"></i>
-            {{ auth()->user()->getPrimaryRole()?->display_name ?? 'No Role' }}
-        </span>
-    </div>
-</li>
+                    <span style="font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--muted);">Role</span>
+                    <div class="mt-1">
+                        <span style="display:inline-flex; align-items:center; gap:.35rem; background:var(--coral-subtle); color:var(--coral); font-size:.75rem; font-weight:600; padding:.25rem .65rem; border-radius:20px;">
+                            <i class="bi bi-shield-check"></i>
+                            {{ auth()->user()->getPrimaryRole()?->display_name ?? 'No Role' }}
+                        </span>
+                    </div>
+                </li>
                 <li><hr class="dropdown-divider" style="border-color:var(--border);"></li>
                 <li>
                     <form action="{{ route('logout') }}" method="POST">
@@ -735,6 +799,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    // ── Mobile sidebar toggle ──
     document.getElementById('sidebarToggle')?.addEventListener('click', () => {
         document.getElementById('sidebar').classList.toggle('open');
     });
@@ -748,11 +813,34 @@
         }
     });
 
+    // ── Auto-dismiss alerts ──
     setTimeout(() => {
         document.querySelectorAll('.alert').forEach(el => {
             try { new bootstrap.Alert(el).close(); } catch(e) {}
         });
     }, 5000);
+
+    // ── Sidebar nav stagger (desktop only) ──
+    if (window.innerWidth >= 768) {
+        const navItems = document.querySelectorAll(
+            '#sidebar .nav-section-label, #sidebar .nav-link'
+        );
+        navItems.forEach((el, i) => {
+            // hero finishes at ~0.77s, start nav items after that
+            const delay = 480 + (i * 50);
+            setTimeout(() => el.classList.add('sb-visible'), delay);
+        });
+
+        // User card appears after all nav items
+        const userCard = document.querySelector('#sidebar .user-card');
+        if (userCard) {
+            const delay = 480 + (navItems.length * 50) + 60;
+            setTimeout(() => {
+                userCard.style.animationDelay = '0ms';
+                // animationDelay is already set via CSS keyframe; just ensure it runs
+            }, delay);
+        }
+    }
 </script>
 
 @stack('scripts')
