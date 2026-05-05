@@ -32,4 +32,6 @@ RUN mkdir -p storage/framework/cache storage/framework/sessions storage/framewor
     && chmod -R 775 storage bootstrap/cache public/uploads
 
 EXPOSE 10000
-CMD ["apache2-foreground"]
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+CMD ["docker-entrypoint.sh"]
