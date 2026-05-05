@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Pet;
 use App\Observers\PetObserver;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use App\Models\SystemNotification;
@@ -15,6 +16,11 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Force HTTPS in production
+        if (env('APP_ENV') === 'production') {
+            URL::forceScheme('https');
+        }
+
         // Bootstrap 5 pagination
         Paginator::useBootstrapFive();
 
